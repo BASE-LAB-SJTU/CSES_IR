@@ -1,9 +1,9 @@
 package CS.Index;
 
+import CS.Util.ConfigUtil;
 import CS.Util.DatasetUtil;
-import CS.Util.xml2jsonUtil;
-import CS.methods.standard.standardSnippetAnalyzer;
-import CS.model.SOqa;
+import CS.methods.base.baseSnippetAnalyzer;
+import CS.model.SOQA;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldType;
@@ -19,24 +19,23 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
-public class QECKSoIndex {
-    public static void main(String[] args) throws Exception {
-        String indexPath = "/mnt/sdb/yh/luceneSeries/SOindex/";
-        String jsonSplitsPath = "/mnt/sdb/yansh/largeSplits/jsonfiles/";
-        buildStackoverflowIndex(jsonSplitsPath, indexPath);
+public class QECKSOIndex {
+    public static void main(String[] args) {
+        String indexPath = ConfigUtil.SOIndex;
+        String SOOriginPath = ConfigUtil.SOOrigin;
+        buildStackoverflowIndex(SOOriginPath, indexPath);
     }
 
-    static void buildStackoverflowIndex(String jsonSplitsPath, String indexPath) throws Exception {
+    static void buildStackoverflowIndex(String jsonSplitsPath, String indexPath){
         Date start = new Date();
         try {
             // create SO first retrieval index
             System.out.println("Indexing to directory '" + indexPath + "'...");
             Directory dir = FSDirectory.open(Paths.get(indexPath));
-            Analyzer analyzer = new standardSnippetAnalyzer();
+            Analyzer analyzer = new baseSnippetAnalyzer();
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-            xml2jsonUtil getJson = new xml2jsonUtil();
-            List<String> soSplitsJson = getJson.getJsonFilenameList(jsonSplitsPath);
+            List<String> soSplitsJson = DatasetUtil.getTypeFilenameList(jsonSplitsPath,".json");
             IndexWriter writer = new IndexWriter(dir, iwc);
             for (String jfile: soSplitsJson) {
                 System.out.println("json index builed:" +jfile);
@@ -53,7 +52,7 @@ public class QECKSoIndex {
 
 
     static void indexDocs(final IndexWriter writer, String path) throws Exception {
-        List<SOqa> soData = DatasetUtil.loadSoData(path);
+        List<SOQA> soData = DatasetUtil.loadSoData(path);
         System.out.println("sodata length:" + soData.size());
         FieldType ff = new FieldType();
         ff.setStoreTermVectors(true);
@@ -63,31 +62,14 @@ public class QECKSoIndex {
         scoreType.setStoreTermVectors(false);
         scoreType.setStored(true);
         scoreType.setIndexOptions(IndexOptions.DOCS);
-        for(SOqa so: soData){
+        for(SOQA so: soData){
             Document document = new Document();
-            String soBlock = so.getQ() + "\t" + so.getA();
-//            System.out.println("qs:" + so.getqScore() + " as:" + so.getaScore() + " so:" + soBlock);
+            String soBlock = so.getQuestion() + "\t" + so.getAnswer();
             StoredField soField = new StoredField("content", soBlock, ff);
             document.add(soField);
             document.add(new NumericDocValuesField("qScore", so.getqScore()));
             document.add(new NumericDocValuesField("aScore", so.getaScore()));
             writer.addDocument(document);
         }
-    }
-
-    static void QECKindexDocs(final IndexWriter writer, String path) throws Exception {
-        List<SOqa> soData = DatasetUtil.loadSoData(path);
-        FieldType ff = new FieldType();
-        ff.setStoreTermVectors(true);
-        ff.setStored(true);
-        ff.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
-        for(SOqa so: soData){
-            Document document = new Document();
-            String soBlock = so.getQ() + "\t" + so.getA();
-            StoredField soField = new StoredField("snippet", soBlock, ff);
-            document.add(soField);
-            writer.addDocument(document);
-        }
-
     }
 }

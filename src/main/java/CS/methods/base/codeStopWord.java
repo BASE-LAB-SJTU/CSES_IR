@@ -1,4 +1,4 @@
-package CS.methods.standard;
+package CS.methods.base;
 
 import CS.Util.ConfigUtil;
 import org.apache.lucene.analysis.CharArraySet;
@@ -8,13 +8,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class codeQueryStopWord {
-    public static CharArraySet CODE_QUERY_STOP_WORDS_SET = null;
+public class codeStopWord {
+    public static CharArraySet CODE_STOP_WORDS_SET = null;
 
     static {
         try {
             ArrayList<String> stopWords = new ArrayList<>();
-            FileReader fr = new FileReader(ConfigUtil.codeQueryStopWord);
+            FileReader fr = new FileReader(ConfigUtil.codeStopWord);
             BufferedReader bf = new BufferedReader(fr);
             String str = "";
             while ((str = bf.readLine()) != null) {
@@ -24,7 +24,7 @@ public class codeQueryStopWord {
             fr.close();
 
             final CharArraySet stopSet = new CharArraySet(stopWords, false);
-            CODE_QUERY_STOP_WORDS_SET = CharArraySet.unmodifiableSet(stopSet);
+            CODE_STOP_WORDS_SET = CharArraySet.unmodifiableSet(stopSet);
         } catch (IOException e) {
             e.printStackTrace();
         }

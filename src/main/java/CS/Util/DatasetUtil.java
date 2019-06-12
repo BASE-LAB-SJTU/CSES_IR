@@ -1,17 +1,11 @@
 package CS.Util;
 
 import CS.model.APIdata;
-import CS.model.QueryDataRow;
 import CS.model.QueryTestCase;
-import CS.model.SOqa;
+import CS.model.SOQA;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import cses.parser.ParserOutput;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import CS.model.IndexedCode;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,21 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DatasetUtil {
-
-    public enum DataFormat {
-        CSV, XLSX, TXT, JSON
-    }
-
-    public class APIData {
-        public String FQN;
-        public String description;
-
-        public APIData(String f, String d) {
-            FQN = f;
-            description = d;
-        }
-
-    }
 
     public static List<APIdata> loadAPIData(String path) throws Exception {
         JSONParser parser = new JSONParser();
@@ -62,23 +41,19 @@ public class DatasetUtil {
         return apis;
     }
 
-    public static List<SOqa> loadSoData(String path) throws Exception {
-        List<SOqa> soDataList = new ArrayList<SOqa>();
+    public static List<SOQA> loadSoData(String path) throws Exception {
+        List<SOQA> soDataList = new ArrayList<SOQA>();
         JSONParser parser = new JSONParser();
         JSONArray QAs = (JSONArray) parser.parse(new FileReader(path));
 
-        int size = QAs.size();
-        //String[] soData = new String[size];
-        int i = 0;
         for (Object qa : QAs) {
             JSONObject jqa = (JSONObject) qa;
-            SOqa so = new SOqa();
-            so.setA(((String) jqa.get("a")).replace("\n", ""));
-            so.setQ(((String) jqa.get("q")).replace("\n", ""));
+            SOQA so = new SOQA();
+            so.setAnswer(((String) jqa.get("a")).replace("\n", ""));
+            so.setQuestion(((String) jqa.get("q")).replace("\n", ""));
             so.setaScore((long) jqa.get("aScore"));
             so.setqScore((long) jqa.get("qScore"));
             soDataList.add(so);
-            i++;
         }
         return soDataList;
     }
@@ -101,7 +76,7 @@ public class DatasetUtil {
         return null;
     }
 
-    public static List<String>[] loadJsonTrueResults(String path) {
+    public static List<String>[] loadTrueResults(String path) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(path));
@@ -118,43 +93,26 @@ public class DatasetUtil {
         return null;
     }
 
-    public static Workbook getWorkbook(InputStream in, File file) throws IOException{
-        Workbook wb = null;
-        if(file.getName().endsWith("xls")){  //Excel 2003
-            wb = new HSSFWorkbook(in);
-        }else if(file.getName().endsWith("xlsx")){ // Excel 2007/2010
-            wb = new XSSFWorkbook(in);
+    public static List<String> getTypeFilenameList(String dirPath, String type) {
+        // scan target directory and get file list
+        File[] allFiles = new File(dirPath).listFiles();
+        List<String> filenameList = new ArrayList<String>();
+
+        for (File file: allFiles) {
+            if (file.isFile() && file.getName().substring(file.getName().length() - type.length()).contains(type))
+                filenameList.add(file.getName());
         }
-        return wb;
+        return filenameList;
     }
 
-    public static List<QueryDataRow> getDataList(String filepath) {
+    public static IndexedCode[]  getParsedCodeFromJson(String jsonPath) {
         try {
-            File excelFile = new File(filepath);
-            FileInputStream in = new FileInputStream(excelFile);
-            Workbook workbook = getWorkbook(in, excelFile);
-            Sheet sheet = workbook.getSheetAt(0);
-            List<QueryDataRow> rowList = new ArrayList<>();
-            for (Row row : sheet) {
-                QueryDataRow qdr = new QueryDataRow(row);
-                rowList.add(qdr);
-            }
-            return rowList;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static ParserOutput.IndexedCode[]  getParsedCodeFromJson(String jsonPath) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(jsonPath));
+            BufferedReader reader = new BufferedReader(new FileReader(jsonPath));
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-            ParserOutput.IndexedCode[] codes = gson.fromJson(reader, ParserOutput.IndexedCode[].class);
+            IndexedCode[] codes = gson.fromJson(reader, IndexedCode[].class);
             return codes;
         } catch (FileNotFoundException ex) {
-
+            System.out.print(ex.toString());
         }
         return null;
     }

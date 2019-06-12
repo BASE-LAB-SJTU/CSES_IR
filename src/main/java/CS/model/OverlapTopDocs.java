@@ -6,7 +6,7 @@ import org.apache.lucene.search.ScoreDoc;
 import java.io.IOException;
 import java.util.*;
 
-// design for CodeHow : API understanding
+// design for ExpandQueryBuilder : API understanding
 public class OverlapTopDocs {
 
     private ScoreDoc[] FQNsd;
@@ -16,7 +16,7 @@ public class OverlapTopDocs {
     public OverlapTopDocs(ScoreDoc[] sdlist1, ScoreDoc[] sdlist2) {
         this.FQNsd = sdlist1;
         this.descSd = sdlist2;
-        overlapDocId = new ArrayList<Integer>();
+        overlapDocId = new ArrayList<>();
         for (ScoreDoc sd1: sdlist1) {
             for (ScoreDoc sd2: sdlist2) {
                 if(sd2.doc == sd1.doc) {
@@ -57,10 +57,12 @@ public class OverlapTopDocs {
         return maxNO;
     }
 
-    /*
-     *  Get API score from overlap set;
-     *  if API is in overlap, return added value;
-     *  else return (min * api) / (maxNo + a)
+    /**
+     * Get API score from overlap set;
+     * if API is in overlap, return added value;
+     * else return (min * api) / (maxNo + Answer)
+     * @param docid
+     * @return
      */
     public double getAPIscore( int docid ) {
         double score = 0;
@@ -79,8 +81,13 @@ public class OverlapTopDocs {
         return score;
     }
 
-    /*
+
+
+    /**
      * Get API rank list by desc order;
+     * @param searcher
+     * @param topK
+     * @return
      */
     public List<?> getAPIRank (IndexSearcher searcher, int topK) {
         Map<String, Double> rank = new HashMap<>();
@@ -112,10 +119,10 @@ public class OverlapTopDocs {
         return rtnList;
     }
 
-    /*
-     *  Get added score from overlap set
-     *  return respective score if not in overlap
-     *  return added score if in
+    /**
+     * Get added score from overlap set. return respective score if not in overlap; return added score if in overlap.
+     * @param docid
+     * @return
      */
     private double getAddScoreFromOverlap(int docid) {
         double addScore = 0;
@@ -145,8 +152,10 @@ public class OverlapTopDocs {
         return max;
     }
 
-    /*
+    /**
      * MAP SORT BY VALUE DESCEND ORDER
+     * @param inputMap
+     * @return
      */
     private List<Map.Entry<String, Double>> getSortedListDesc(Map<String, Double> inputMap) {
 

@@ -1,25 +1,19 @@
-package CS.methods.standard;
+package CS.methods.base;
 
 
-import CS.Util.ConfigUtil;
 import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
-import org.apache.lucene.analysis.synonym.SynonymMap;
-import org.apache.lucene.analysis.synonym.WordnetSynonymParser;
-import org.apache.lucene.search.similarities.TFIDFSimilarity;
-
-import java.io.*;
-import java.text.ParseException;
 
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.*;
 
-public class standardQueryAnalyzer extends Analyzer {
+public class baseQueryAnalyzer extends Analyzer {
+    /**
+     * Query preprocess. Include: removing the stopwords, splitting compound words, lowering and stemming.
+     * @param fieldName
+     * @return
+     */
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
         Tokenizer source = new StandardTokenizer();

@@ -1,25 +1,25 @@
 package CS.model;
 
-public class SOqa {
-    String q = "";
-    String a = "";
+public class SOQA {
+    String Question = "";
+    String Answer = "";
     long qScore = 0;
     long aScore = 0;
 
-    public String getQ() {
-        return q;
+    public String getQuestion() {
+        return Question;
     }
 
-    public void setQ(String q) {
-        this.q = q;
+    public void setQuestion(String question) {
+        this.Question = question;
     }
 
-    public String getA() {
-        return a;
+    public String getAnswer() {
+        return Answer;
     }
 
-    public void setA(String a) {
-        this.a = a;
+    public void setAnswer(String answer) {
+        this.Answer = answer;
     }
 
     public long getqScore() {

@@ -24,9 +24,6 @@ public class TfidfSimilarity extends TFIDFSimilarity {
         return 1.0F / (float)(distance + 1);
     }
 
-    /*
-     * Not implemented
-     */
     @Override
     public float scorePayload(int doc, int start, int end, BytesRef payload) {
         return 1;

@@ -3,6 +3,7 @@ package CS.Util;
 import CS.evaluation.*;
 import com.csvreader.CsvWriter;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
@@ -21,8 +22,8 @@ public class EvaluateUtil {
     int firstPos[] = null;
     long[] times = null;
     int size = 0;
-
-    public EvaluateUtil(List<String>[] trueResults) {
+    IndexSearcher searcher = null;
+    public EvaluateUtil(List<String>[] trueResults,IndexSearcher s) {
         if (trueResults == null) throw new Error("true result is null");
         this.trueResults = trueResults;
         this.size = trueResults.length;
@@ -30,11 +31,9 @@ public class EvaluateUtil {
         this.ranks = new String[size][];
         this.scores = new float[size][];
         this.firstPos = new int[size];
+        this.searcher = s;
     }
 
-    public void printResult(String path){
-        writeCSV(path,evaluates());
-    }
     public String[][] evaluates() {
         String[][] results = new String[size][];
         for (int i = 0; i < size; i++) {
@@ -57,15 +56,23 @@ public class EvaluateUtil {
         return new String[]{String.valueOf(i+1), String.valueOf(ConfigUtil.TopK),p,r,f,ap,rr, NDCG, firstPos, String.valueOf(times[i])};
     }
 
-    public void setFirstPos(int numsHit, int i, TopDocs td) throws IOException {
+    private void setFirstPos(int queryId, Query query) throws Exception{
+        int numsHit = searcher.count(query);
         if (numsHit > 0) {
-            setFirstPos(td, i, false);
+            TopDocs docs = searcher.search(query, numsHit);
+            int[] rank = new int[docs.scoreDocs.length];
+            for (int i = 0; i < rank.length; i ++) {
+                rank[i] = docs.scoreDocs[i].doc;
+            }
+            firstPos[queryId] = FirstPosition.getFirstPos(rank, trueResults[queryId]);
         } else {
-            setFirstPos(null, i, true);
+            firstPos[queryId] = -1;
         }
     }
 
-    public void setResult(TopDocs docs, long time, int queryId, IndexSearcher searcher) throws IOException {
+    public void setResult(TopDocs docs, long time, int queryId, Query query) throws Exception {
+        setFirstPos(queryId, query);
+
         ScoreDoc[] sds = docs.scoreDocs;
         int size = sds.length;
         String[] rank = new String[size];
@@ -79,20 +86,7 @@ public class EvaluateUtil {
         times[queryId] = time;
     }
 
-    public void setFirstPos(TopDocs docs, int queryId, boolean zeroHit) {
-        if (zeroHit) {
-            firstPos[queryId] = -1;
-        } else {
-            int[] rank = new int[docs.scoreDocs.length];
-            for (int i = 0; i < rank.length; i ++) {
-                rank[i] = docs.scoreDocs[i].doc;
-            }
-            firstPos[queryId] = FirstPosition.getFirstPos(rank, trueResults[queryId]);
-        }
-    }
-
-
-    public void writeCSV(String csvFilePath, String[][] contents) {
+    private void writeCSV(String csvFilePath, String[][] contents) {
         try {
             CsvWriter csvWriter = new CsvWriter(csvFilePath, ',', Charset.forName("UTF-8"));
             String[] csvHeaders = MetricsSet.METRICS_PER_FILE;
@@ -121,18 +115,10 @@ public class EvaluateUtil {
 
     /**
      * Call writeCSV with default value
-     * @param csvFilePath
+     * @param resultFilePath the path of result file
      */
-    public void writeDefaultCSV(String csvFilePath) {
-        writeCSV(csvFilePath, evaluates());
-    }
-
-    /**
-     * Call getTotalResultPerFile with default value
-     * @return
-     */
-    public MetricsSet getTotalResultPerFile() {
-        return getTotalResultPerFile(evaluates());
+    public void writeDefaultCSV(String resultFilePath) {
+        writeCSV(resultFilePath, evaluates());
     }
 
     /**
@@ -140,13 +126,12 @@ public class EvaluateUtil {
      * @param contents every metric with each code snippet
      * @return metrics of a  test file
      */
-    public MetricsSet getTotalResultPerFile(String[][] contents) {
+    private MetricsSet getTotalResultPerFile(String[][] contents) {
         String[] csvHeaders = MetricsSet.METRICS_PER_FILE;
         MetricsSet thisFileResult = new MetricsSet();
         int caseSize = csvHeaders.length - 2;
-        Double[] RowSum = new Double[caseSize]; // [p, r, f, ap, rr, time]
-        Integer[] RowCount = new Integer[caseSize];// corresponding count
-        // initialize two list
+        Double[] RowSum = new Double[caseSize];
+        Integer[] RowCount = new Integer[caseSize];
         for (int i = 0; i < caseSize; i ++) {
             RowSum[i] = 0.0;
             RowCount[i] = 0;

@@ -42,8 +42,13 @@ public class QueryTerm {
         return filteredTerm;
     }
 
-    /*
-     * From term list get expression designed in CodeHow
+    /**
+     * From term list get expression designed in ExpandQueryBuilder
+     * @param needFQN
+     * @param FQN
+     * @param isAnd
+     * @param apiscore
+     * @param maxTF
      * @return SourceText used in JavascriptCompression
      */
     public String getScoreExpressionStr(boolean needFQN, String FQN, boolean isAnd, double apiscore, double maxTF) {
@@ -82,15 +87,9 @@ public class QueryTerm {
                 if (term.equals(FQN)) {
                     zeroItem = String.format("(((%s - 0.5) * %s == 0 )? 0 : 1)", term, term);
                 }
-//                String zeroItem = String.format("(((%s - 0.5)== 0 )? 0 : 1)",  term);
                 zeroFactor += (zeroFactor.length() == 0) ? zeroItem : " * " + zeroItem;
             }
-            String sim_and = String.format("%s * (1 - pow ((%s) / (%s) , %s))", zeroFactor, numerator, demoninator, p_norm_exp );
-            sim_and = String.format("1 - pow ((%s) / (%s) , %s)", numerator, demoninator, p_norm_exp );
-            sim = sim_and;
-        }else {
-            String sim_or = "";
-            sim = sim_or;
+            sim = String.format("1 - pow ((%s) / (%s) , %s)", numerator, demoninator, p_norm_exp );
         }
         return sim;
     }

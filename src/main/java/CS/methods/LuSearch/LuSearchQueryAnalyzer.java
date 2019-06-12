@@ -1,9 +1,8 @@
-package CS.methods.Wordnet;
+package CS.methods.LuSearch;
 
 
-import CS.methods.standard.codeQueryStopWord;
+import CS.methods.base.codeQueryStopWord;
 import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
@@ -11,7 +10,6 @@ import java.io.*;
 import java.text.ParseException;
 
 import org.apache.lucene.analysis.en.PorterStemFilter;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
 import org.apache.lucene.analysis.synonym.SynonymMap;
@@ -20,7 +18,7 @@ import CS.Util.ConfigUtil;
 
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.*;
 
-public class WordnetQueryAnalyzer extends Analyzer {
+public class LuSearchQueryAnalyzer extends Analyzer {
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
         Tokenizer source = new StandardTokenizer();
@@ -41,9 +39,7 @@ public class WordnetQueryAnalyzer extends Analyzer {
             SynonymMap.Builder parser = new WordnetSynonymParser(true, true, new StandardAnalyzer(CharArraySet.EMPTY_SET));
             ((WordnetSynonymParser) parser).parse(rulesReader);
             return parser.build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

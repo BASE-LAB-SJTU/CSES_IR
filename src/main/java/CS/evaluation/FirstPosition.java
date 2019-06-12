@@ -10,13 +10,11 @@ public class FirstPosition {
      * @return first position n
      */
     public static  int getFirstPos(int[] ranking, List<String> trueResult) {
-        int firstPos = -1;
         for (int i = 0; i < ranking.length; i++) {
             if (trueResult.contains(ranking[i])) {
-                firstPos = i;
-                break;
+                return i;
             }
         }
-        return firstPos;
+        return -1;
     }
 }

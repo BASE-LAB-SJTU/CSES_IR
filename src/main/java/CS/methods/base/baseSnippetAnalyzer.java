@@ -1,13 +1,18 @@
-package CS.methods.standard;
+package CS.methods.base;
 
 import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.core.LetterTokenizer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter;
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.*;
 
-public class standardSnippetAnalyzer extends Analyzer {
+public class baseSnippetAnalyzer extends Analyzer {
+    /**
+     * Code snippet preprocess. Include: removing the stopwords for code, splitting compound words, lowering and
+     * stemming.
+     * @param fieldName
+     * @return
+     */
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
         Tokenizer source = new LetterTokenizer();//new StandardTokenizer();
