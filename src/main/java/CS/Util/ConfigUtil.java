@@ -6,8 +6,8 @@ public class ConfigUtil {
 
     //QECK
     public static final int QECKTopNWords = 5;
-    public static final String SOIndex = "src/test/resources/lusearch/QECK/SOindex/";
-    public static final String SOOrigin = "src/test/resources/lusearch/QECK/SOorigin/";
+    public static final String SOIndex = "src/test/resources/QECK/SOindex/";
+    public static final String SOOrigin = "src/test/resources/QECK/SOorigin/";
 
     //Codehow
     public static final int TopkAPI = 5;
@@ -17,8 +17,8 @@ public class ConfigUtil {
     public static final String p_norm = "3";
     public static final String p_norm_exp = "1/3";
     //api data
-    public static final String APIOrigin = "src/test/resources/ExpandQueryBuilder/API/javaAPI.json";
-    public static final String APIIndex = "src/test/resources/ExpandQueryBuilder/API/index";
+    public static final String APIOrigin = "src/test/resources/Codehow/API/javaAPI.json";
+    public static final String APIIndex = "src/test/resources/Codehow/API/index";
 
     //config for all methods
     public static final int TopK = 20;

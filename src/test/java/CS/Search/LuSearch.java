@@ -50,8 +50,7 @@ public class LuSearch {
     public static void evaluation() throws Exception {
 
         List<String> querys = DatasetUtil.loadQuerysFromJson(QAPath);
-        List<String>[] trueResults = DatasetUtil.loadTrueResults(QAPath);
-        EvaluateUtil eu = new EvaluateUtil(trueResults,searcher);
+        EvaluateUtil eu = new EvaluateUtil(DatasetUtil.loadTrueResults(QAPath),searcher);
         int i = 0;
         for (String rawQuery : querys) {
             Date start = new Date();
@@ -60,6 +59,8 @@ public class LuSearch {
             Date end = new Date();
 
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
+            System.out.print(i+"'th query finished\n");
+
         }
         eu.writeDefaultCSV(evalResultPath);
     }

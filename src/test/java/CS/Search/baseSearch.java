@@ -59,6 +59,7 @@ public class baseSearch {
             TopDocs docs = searcher.search(query, topK);
             Date end = new Date();
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
+            System.out.print(i+"'th query finished\n");
         }
 
         eu.writeDefaultCSV(evalResultPath);

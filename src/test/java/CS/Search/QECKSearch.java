@@ -43,10 +43,9 @@ public class QECKSearch {
 
     public static void evaluation() throws Exception {
         List<String> querys = DatasetUtil.loadQuerysFromJson(QAPath);
-        List<String>[] trueResults = DatasetUtil.loadTrueResults(QAPath);
-        EvaluateUtil eu = new EvaluateUtil(trueResults,searcher);
+        EvaluateUtil eu = new EvaluateUtil(DatasetUtil.loadTrueResults(QAPath),searcher);
 
-        int j = 0;
+        int i = 0;
         for (String rawQuery : querys) {
             Date start = new Date();
             rawQuery = StringUtil.replaceReservedWords(rawQuery);
@@ -55,7 +54,9 @@ public class QECKSearch {
             TopDocs docs = searcher.search(query, topK);
             Date end = new Date();
 
-            eu.setResult(docs, (end.getTime() - start.getTime()), j++, query);
+            eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
+            System.out.print(i+"'th query finished\n");
+
         }
         eu.writeDefaultCSV(evalResultPath);
     }

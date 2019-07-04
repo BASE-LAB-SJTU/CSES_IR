@@ -39,8 +39,7 @@ public class CodeHowSearch {
 
     public static void evaluation() throws Exception {
         List<String> querys = DatasetUtil.loadQuerysFromJson(QAPath);
-        List<String>[] trueResults = DatasetUtil.loadTrueResults(QAPath);
-        EvaluateUtil eu = new EvaluateUtil(trueResults,searcher);
+        EvaluateUtil eu = new EvaluateUtil(DatasetUtil.loadTrueResults(QAPath),searcher);
 
         int i = 0;
         for (String rawQuery : querys) {
@@ -51,6 +50,8 @@ public class CodeHowSearch {
             Date end = new Date();
 
             eu.setResult(extbTD, (end.getTime() - start.getTime()), i++, expandedQuery);
+            System.out.print(i+"'th query finished\n");
+
         }
         eu.writeDefaultCSV(evalResultPath);
     }

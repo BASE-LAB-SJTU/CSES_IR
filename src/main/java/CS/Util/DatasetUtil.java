@@ -76,7 +76,7 @@ public class DatasetUtil {
         return null;
     }
 
-    public static List<String>[] loadTrueResults(String path) {
+    public static List<List<String>> loadTrueResults(String path) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(path));
@@ -86,7 +86,7 @@ public class DatasetUtil {
             for (QueryTestCase qtc: codes) {
                 trueResults.add(Arrays.asList(qtc.answerList));
             }
-            return  (List<String>[]) trueResults.toArray(new ArrayList[trueResults.size()]);
+            return  trueResults;
         } catch (FileNotFoundException ex) {
 
         }

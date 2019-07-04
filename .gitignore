@@ -1,5 +1,4 @@
 target/*
-src/test/resources/*
 *.jar
 .idea/*
 *.iml

@@ -18,15 +18,15 @@ public class EvaluateUtil {
 
     String[][] ranks = null;
     float[][] scores = null;
-    List<String>[] trueResults = null;
+    List<List<String>>  trueResults = null;
     int firstPos[] = null;
     long[] times = null;
     int size = 0;
     IndexSearcher searcher = null;
-    public EvaluateUtil(List<String>[] trueResults,IndexSearcher s) {
+    public EvaluateUtil(List<List<String>>  trueResults,IndexSearcher s) {
         if (trueResults == null) throw new Error("true result is null");
         this.trueResults = trueResults;
-        this.size = trueResults.length;
+        this.size = trueResults.size();
         this.times = new long[size];
         this.ranks = new String[size][];
         this.scores = new float[size][];
@@ -44,7 +44,7 @@ public class EvaluateUtil {
 
     private String[] evaluate(int i) {
         String[] rank = ranks[i];
-        List<String> trueResult = trueResults[i];
+        List<String> trueResult = trueResults.get(i);
         PRF prf = new PRF(rank, trueResult);
         String p = String.valueOf(prf.computePrecisionAtK());
         String r = String.valueOf(prf.computeRecalls());
@@ -64,7 +64,7 @@ public class EvaluateUtil {
             for (int i = 0; i < rank.length; i ++) {
                 rank[i] = docs.scoreDocs[i].doc;
             }
-            firstPos[queryId] = FirstPosition.getFirstPos(rank, trueResults[queryId]);
+            firstPos[queryId] = FirstPosition.getFirstPos(rank, trueResults.get(queryId));
         } else {
             firstPos[queryId] = -1;
         }

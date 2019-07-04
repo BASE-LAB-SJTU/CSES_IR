@@ -1,7 +1,7 @@
 package CS.model;
 
 public class QueryTestCase {
-    public int id;
+    public String id;
     public String query;
     public String[] answerList;
 }
