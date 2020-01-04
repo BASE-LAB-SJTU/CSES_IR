@@ -4,7 +4,7 @@ public class MetricsSet{
     public static final String[] METRICS = {"algorithm", "topk", "precision", "recall",
             "f-measure", "map", "mrr", "NDCG", "firstPos","time(ms)", "query number", "data size"};
 
-    public static final String[] METRICS_PER_FILE = {"id", "topk", "p", "r", "f", "ap", "rr","NDCG", "firstPos", "time"};
+    public static final String[] METRICS_PER_FILE = {"id", "topk", "p", "ap", "rr", "time"};
 
     public MetricsSet() {
         this.filename = "";

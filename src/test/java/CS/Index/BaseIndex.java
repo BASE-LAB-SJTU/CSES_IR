@@ -21,7 +21,7 @@ public class BaseIndex {
     public static void main(String[] args) {
         final String codebaseIndexPath = ConfigUtil.codebaseIndex;
         final String codebaseJsonPath = ConfigUtil.codebaseOrigin;
-        final String mode = args[0];
+        final String mode = "c";//args[0];
         buildIndex(codebaseJsonPath, codebaseIndexPath, mode);
     }
 
@@ -33,9 +33,9 @@ public class BaseIndex {
             Directory dir = FSDirectory.open(Paths.get(indexPath));
             Analyzer analyzer = new baseSnippetAnalyzer();
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-            if (mode.equals('a')) {
+            if (mode.equals("a")) {
                 iwc.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
-            } else if (mode.equals('c')){
+            } else if (mode.equals("c")){
                 iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             }
 

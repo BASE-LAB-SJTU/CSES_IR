@@ -54,10 +54,12 @@ public class baseSearch {
 
         int i = 0;
         for (String rawQuery: querys) {
-            Date start = new Date();
             Query query = parser.parse(QueryParser.escape(rawQuery));
+
+            Date start = new Date();
             TopDocs docs = searcher.search(query, topK);
             Date end = new Date();
+
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
             System.out.print(i+"'th query finished\n");
         }
