@@ -16,8 +16,9 @@ import CS.methods.CodeHow.ExpandQueryBuilder;
 
 public class CodeHowSearch {
     static String QAPath = ConfigUtil.QASet;
-    static String evalResultPath = ConfigUtil.CodeHowResult;
+    static String evalResultPath = ConfigUtil.CodeHowEvaluateResult;
     static String codebaseIndexPath = ConfigUtil.codebaseIndex;
+    static String searchResultPath = ConfigUtil.CodeHowSearchResult;
     static String APIIndexPath = ConfigUtil.APIIndex;
     static int topK = ConfigUtil.TopK;
 
@@ -43,7 +44,6 @@ public class CodeHowSearch {
 
         int i = 0;
         for (String rawQuery : querys) {
-
             Date start = new Date();
             Query expandedQuery = expandQueryBuilder.getExpandedQuery(rawQuery);
             TopDocs extbTD = searcher.search(expandedQuery, topK);
@@ -51,9 +51,9 @@ public class CodeHowSearch {
 
             eu.setResult(extbTD, (end.getTime() - start.getTime()), i++, expandedQuery);
             System.out.print(i+"'th query finished\n");
-
         }
-        eu.writeDefaultCSV(evalResultPath);
+        eu.writeSearchResultTXT(searchResultPath);
+        eu.writeEvaluateResultCSV(evalResultPath);
     }
 
     public static List<String> search(String rawQuery) throws Exception {

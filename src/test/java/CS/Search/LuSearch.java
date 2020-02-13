@@ -4,7 +4,6 @@ import CS.Util.ConfigUtil;
 import CS.Util.DatasetUtil;
 import CS.Util.EvaluateUtil;
 import CS.Util.StringUtil;
-import CS.evaluation.MetricsSet;
 import CS.methods.LuSearch.LuSearchQueryAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
@@ -26,8 +25,9 @@ import java.util.List;
 
 public class LuSearch {
     static String QAPath = ConfigUtil.QASet;
-    static String evalResultPath = ConfigUtil.luSearchResult;
+    static String evalResultPath = ConfigUtil.LuSearchEvaluateResult;
     static String codebaseIndexPath = ConfigUtil.codebaseIndex;
+    static String searchResultPath = ConfigUtil.LuSearchSearchResult;
     static int topK = ConfigUtil.TopK;
     static IndexSearcher searcher = null;
     static QueryParser parser = null;
@@ -60,9 +60,9 @@ public class LuSearch {
 
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
             System.out.print(i+"'th query finished\n");
-
         }
-        eu.writeDefaultCSV(evalResultPath);
+        eu.writeSearchResultTXT(searchResultPath);
+        eu.writeEvaluateResultCSV(evalResultPath);
     }
 
     public static List<String> search(String rawQuery) throws Exception {

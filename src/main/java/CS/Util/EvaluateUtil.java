@@ -1,6 +1,7 @@
 package CS.Util;
 
 import CS.evaluation.*;
+import CS.model.QueryTestCase;
 import com.csvreader.CsvWriter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -10,13 +11,16 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static CS.evaluation.NDCG.NDCG;
+import static java.lang.Math.min;
+import org.apache.commons.lang3.StringUtils;
 
 public class EvaluateUtil {
 
@@ -111,7 +115,6 @@ public class EvaluateUtil {
             };
             csvWriter.writeRecord(totalLine);
             csvWriter.close();
-            System.out.println("write csv finish:" + csvFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,8 +124,10 @@ public class EvaluateUtil {
      * Call writeCSV with default value
      * @param resultFilePath the path of result file
      */
-    public void writeDefaultCSV(String resultFilePath) {
+    public void writeEvaluateResultCSV(String resultFilePath) {
         writeCSV(resultFilePath, evaluates());
+        System.out.println("write evaluate result finished:" + resultFilePath);
+
     }
 
     /**
@@ -162,5 +167,23 @@ public class EvaluateUtil {
         return thisFileResult;
     }
 
+    public void writeSearchResultTXT(String resultFilePath){
+        try {
+            BufferedWriter writer= new BufferedWriter(new FileWriter(resultFilePath));
+            for (String[] resultPerQuery:ranks){
+                String result = StringUtils.join(resultPerQuery,",");
+                writer.write(result+"\n");
+            }
+            writer.close();
+            System.out.println("write search result finished:" + resultFilePath);
+        } catch (Exception ex) {
+            System.out.print(ex.getMessage());
+        }
+    }
+
+    public void setSearchResult(String[] docs, int queryId) throws IOException {
+        ranks[queryId] = docs;
+        times[queryId] = 0;
+    }
 
 }

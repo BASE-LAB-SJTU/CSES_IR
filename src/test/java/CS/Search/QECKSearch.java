@@ -20,9 +20,10 @@ import java.util.List;
 
 public class QECKSearch {
     static String QAPath = ConfigUtil.QASet;
-    static String evalResultPath = ConfigUtil.QECKResult;
+    static String evalResultPath = ConfigUtil.QECKEvaluateResult;
     static String codebaseIndexPath = ConfigUtil.codebaseIndex;
     static String SOIndexPath = ConfigUtil.SOIndex;
+    static String searchResultPath = ConfigUtil.QECKSearchResult;
     static int topK = ConfigUtil.TopK;
     static ExpandQueryBuilder expandQueryBuilder = null;
     static IndexSearcher searcher = null;
@@ -56,9 +57,9 @@ public class QECKSearch {
 
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
             System.out.print(i+"'th query finished\n");
-
         }
-        eu.writeDefaultCSV(evalResultPath);
+        eu.writeSearchResultTXT(searchResultPath);
+        eu.writeEvaluateResultCSV(evalResultPath);
     }
 
     public static List<String> search(String rawQuery) throws Exception {

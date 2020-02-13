@@ -69,9 +69,11 @@ public class DatasetUtil {
             for (QueryTestCase qtc: codes) {
                 querys.add(qtc.query);
             }
+            System.out.println("load query finished:" + path);
+
             return  querys;
         } catch (FileNotFoundException ex) {
-
+            System.out.print(ex.getMessage());
         }
         return null;
     }

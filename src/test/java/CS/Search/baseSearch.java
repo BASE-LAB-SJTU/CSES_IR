@@ -6,8 +6,6 @@ import CS.Util.DatasetUtil;
 import CS.Util.EvaluateUtil;
 import CS.Util.StringUtil;
 import CS.methods.base.baseQueryAnalyzer;
-import CS.similarity.TfidfSimilarity;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -25,7 +23,8 @@ import java.util.List;
 
 public class baseSearch {
     static String QAPath = ConfigUtil.QASet;
-    static String evalResultPath = ConfigUtil.baseResult;
+    static String evalResultPath = ConfigUtil.BaseLuceneEvaluateResult;
+    static String searchResultPath = ConfigUtil.BaseLuceneSearchResult;
     static String codebaseIndexPath = ConfigUtil.codebaseIndex;
     static int topK = ConfigUtil.TopK;
     static IndexSearcher searcher = null;
@@ -61,10 +60,11 @@ public class baseSearch {
             Date end = new Date();
 
             eu.setResult(docs, (end.getTime() - start.getTime()), i++, query);
-            System.out.print(i+"'th query finished\n");
+            System.out.print(i+"'th query search finished\n");
         }
 
-        eu.writeDefaultCSV(evalResultPath);
+        eu.writeSearchResultTXT(searchResultPath);
+        eu.writeEvaluateResultCSV(evalResultPath);
     }
 
     public static List<String> search(String rawQuery) throws Exception {

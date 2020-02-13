@@ -27,10 +27,21 @@ public class ConfigUtil {
     public static final String QASet = "src/test/resources/CosBench/query2answer.json";
     public static final String codeStopWord = "src/test/resources/stopwords/codeStopWord";
     public static final String codeQueryStopWord = "src/test/resources/stopwords/codeQueryStopWord";
+
     //evaluation result
-    public static final String baseResult = "src/test/resources/result/baseResult_"+ConfigUtil.TopK+".csv";
-    public static final String QECKResult = "src/test/resources/result/QECKResult_"+ConfigUtil.TopK+".csv";
-    public static final String luSearchResult = "src/test/resources/result/luSearchResult_"+ConfigUtil.TopK+".csv";
-    public static final String CodeHowResult = "src/test/resources/result/CodeHowResult_"+ConfigUtil.TopK+".csv";
+    public static final String BaseLuceneEvaluateResult = "src/test/resources/evaluateResult/BaseLuceneEvaluateResult_"+ConfigUtil.TopK+".csv";
+    public static final String QECKEvaluateResult = "src/test/resources/evaluateResult/QECKEvaluateResult_"+ConfigUtil.TopK+".csv";
+    public static final String LuSearchEvaluateResult = "src/test/resources/evaluateResult/luSearchEvaluateResult_"+ConfigUtil.TopK+".csv";
+    public static final String YeSearchEvaluateResult = "src/test/resources/evaluateResult/YeSearchEvaluateResult_"+ConfigUtil.TopK+".csv";
+    public static final String CodeHowEvaluateResult = "src/test/resources/evaluateResult/CodeHowEvaluateResult_"+ConfigUtil.TopK+".csv";
+    public static final String CodennEvaluateResult = "src/test/resources/evaluateResult/CodennEvaluateResult_"+ConfigUtil.TopK+".csv";
+
+    //search result
+    public static final String BaseLuceneSearchResult = "src/test/resources/searchResult/BaseLuceneSearchResult.txt";
+    public static final String QECKSearchResult = "src/test/resources/searchResult/QECKSearchResult.txt";
+    public static final String LuSearchSearchResult = "src/test/resources/searchResult/LuSearchSearchResult.txt";
+    public static final String CodeHowSearchResult = "src/test/resources/searchResult/CodeHowSearchResult.txt";
+    public static final String CodennSearchResult = "src/test/resources/searchResult/CodennSearchResult.txt";
+    public static final String YeSearchSearchResult = "src/test/resources/searchResult/YeSearchSearchResult.txt";
 
 }
