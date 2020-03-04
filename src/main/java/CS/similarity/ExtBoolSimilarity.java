@@ -124,8 +124,6 @@ public class ExtBoolSimilarity extends Similarity {
         public float score(int doc, float freq) throws IOException {
             final float raw = tf(freq) * weightValue; // compute tf(f)*weight
             float notInAPIScore = (float) (0.5 + (1-0.5) * raw);
-//            System.out.println("doc:" + doc);
-//            System.out.println("not in api score:" + notInAPIScore);
             return (isAPI) ? APIscore : notInAPIScore;
         }
 

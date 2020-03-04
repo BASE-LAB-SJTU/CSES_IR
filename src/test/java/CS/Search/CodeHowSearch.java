@@ -33,8 +33,6 @@ public class CodeHowSearch {
     public static void prepare() throws Exception{
         IndexReader normalReader = DirectoryReader.open(FSDirectory.open(Paths.get(codebaseIndexPath)));
         searcher = new IndexSearcher(normalReader);
-        // searcher.setSimilarity(new ExtBoolSimilarity());
-
         expandQueryBuilder = new ExpandQueryBuilder(APIIndexPath, topK, searcher);
     }
 
